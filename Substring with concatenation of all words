@@ -1,0 +1,63 @@
+import java.util.*;
+
+class Solution {
+    public List<Integer> findSubstring(String s, String[] words) {
+        List<Integer> result = new ArrayList<>();
+
+        if (s == null || s.length() == 0 || words.length == 0)
+            return result;
+
+        int wordLen = words[0].length();
+        int wordCount = words.length;
+
+        // Step 1: Build frequency map
+        Map<String, Integer> wordMap = new HashMap<>();
+        for (String word : words) {
+            wordMap.put(word, wordMap.getOrDefault(word, 0) + 1);
+        }
+
+        // Step 2: Sliding window
+        for (int i = 0; i < wordLen; i++) {
+            int left = i;
+            int count = 0;
+            Map<String, Integer> seenMap = new HashMap<>();
+
+            for (int j = i; j <= s.length() - wordLen; j += wordLen) {
+                String word = s.substring(j, j + wordLen);
+
+                // If valid word
+                if (wordMap.containsKey(word)) {
+                    seenMap.put(word, seenMap.getOrDefault(word, 0) + 1);
+                    count++;
+
+                    // If word occurs too many times → shrink window
+                    while (seenMap.get(word) > wordMap.get(word)) {
+                        String leftWord = s.substring(left, left + wordLen);
+                        seenMap.put(leftWord, seenMap.get(leftWord) - 1);
+                        left += wordLen;
+                        count--;
+                    }
+
+                    // If all words matched
+                    if (count == wordCount) {
+                        result.add(left);
+
+                        // Move window forward
+                        String leftWord = s.substring(left, left + wordLen);
+                        seenMap.put(leftWord, seenMap.get(leftWord) - 1);
+                        left += wordLen;
+                        count--;
+                    }
+
+                } else {
+                    // Reset window if invalid word
+                    seenMap.clear();
+                    count = 0;
+                    left = j + wordLen;
+                }
+            }
+        }
+
+        return result;
+    }
+}
