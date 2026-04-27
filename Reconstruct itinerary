@@ -1,0 +1,30 @@
+import java.util.*;
+
+class Solution {
+    Map<String, PriorityQueue<String>> graph = new HashMap<>();
+    LinkedList<String> result = new LinkedList<>();
+
+    public List<String> findItinerary(List<List<String>> tickets) {
+        // Step 1: Build graph
+        for (List<String> t : tickets) {
+            graph.putIfAbsent(t.get(0), new PriorityQueue<>());
+            graph.get(t.get(0)).offer(t.get(1));
+        }
+
+        // Step 2: DFS
+        dfs("JFK");
+
+        return result;
+    }
+
+    private void dfs(String src) {
+        PriorityQueue<String> pq = graph.get(src);
+
+        while (pq != null && !pq.isEmpty()) {
+            dfs(pq.poll());
+        }
+
+        // add after exploring all edges
+        result.addFirst(src);
+    }
+}
