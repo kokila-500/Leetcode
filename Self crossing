@@ -1,0 +1,31 @@
+class Solution {
+    public boolean isSelfCrossing(int[] d) {
+        int n = d.length;
+
+        for (int i = 3; i < n; i++) {
+
+            // Case 1: current crosses the segment 3 steps ahead
+            if (d[i] >= d[i - 2] && d[i - 1] <= d[i - 3]) {
+                return true;
+            }
+
+            // Case 2: current overlaps with segment 4 steps ahead
+            if (i >= 4 &&
+                d[i - 1] == d[i - 3] &&
+                d[i] + d[i - 4] >= d[i - 2]) {
+                return true;
+            }
+
+            // Case 3: complex crossing with segment 5 steps ahead
+            if (i >= 5 &&
+                d[i - 2] >= d[i - 4] &&
+                d[i] >= d[i - 2] - d[i - 4] &&
+                d[i - 1] >= d[i - 3] - d[i - 5] &&
+                d[i - 1] <= d[i - 3]) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
