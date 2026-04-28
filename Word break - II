@@ -1,0 +1,40 @@
+import java.util.*;
+
+class Solution {
+    // Memoization map to store results for substrings
+    Map<String, List<String>> memo = new HashMap<>();
+
+    public List<String> wordBreak(String s, List<String> wordDict) {
+        Set<String> wordSet = new HashSet<>(wordDict);
+        return backtrack(s, wordSet);
+    }
+
+    private List<String> backtrack(String s, Set<String> wordSet) {
+        // Return cached result if available
+        if (memo.containsKey(s)) return memo.get(s);
+
+        List<String> res = new ArrayList<>();
+        
+        // Base case: end of string reached
+        if (s.isEmpty()) {
+            res.add("");
+            return res;
+        }
+
+        // Try every possible split
+        for (int i = 1; i <= s.length(); i++) {
+            String prefix = s.substring(0, i);
+            
+            if (wordSet.contains(prefix)) {
+                List<String> subList = backtrack(s.substring(i), wordSet);
+                
+                for (String sub : subList) {
+                    res.add(prefix + (sub.isEmpty() ? "" : " ") + sub);
+                }
+            }
+        }
+
+        memo.put(s, res);
+        return res;
+    }
+}
