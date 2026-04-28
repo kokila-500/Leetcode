@@ -1,0 +1,30 @@
+import java.util.*;
+
+class Solution {
+    public int maxEnvelopes(int[][] envelopes) {
+        // Step 1: Sort width asc, height desc
+        Arrays.sort(envelopes, (a, b) -> {
+            if (a[0] == b[0]) return b[1] - a[1];
+            return a[0] - b[0];
+        });
+
+        // Step 2: Find LIS of the heights
+        int n = envelopes.length;
+        int[] dp = new int[n];
+        int len = 0;
+
+        for (int[] envelope : envelopes) {
+            int h = envelope[1];
+            // Binary search for the index to replace/append
+            int i = Arrays.binarySearch(dp, 0, len, h);
+            
+            // If not found, binarySearch returns -(insertionPoint + 1)
+            if (i < 0) i = -(i + 1);
+            
+            dp[i] = h;
+            if (i == len) len++;
+        }
+
+        return len;
+    }
+}
