@@ -1,0 +1,28 @@
+class Solution {
+    public ListNode insertionSortList(ListNode head) {
+        if (head == null) return null;
+
+        ListNode dummy = new ListNode(0);
+        ListNode curr = head;
+
+        while (curr != null) {
+            // Store the next node to process
+            ListNode nextNode = curr.next;
+
+            // Search for the position in the sorted part
+            ListNode prev = dummy;
+            while (prev.next != null && prev.next.val < curr.val) {
+                prev = prev.next;
+            }
+
+            // Insert curr between prev and prev.next
+            curr.next = prev.next;
+            prev.next = curr;
+
+            // Move to the next node in the original list
+            curr = nextNode;
+        }
+
+        return dummy.next;
+    }
+}
