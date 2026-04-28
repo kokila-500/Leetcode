@@ -1,0 +1,44 @@
+import java.util.*;
+
+class Solution {
+    public boolean isRectangleCover(int[][] rectangles) {
+        if (rectangles.length == 0) return false;
+
+        int x1 = Integer.MAX_VALUE, y1 = Integer.MAX_VALUE;
+        int x2 = Integer.MIN_VALUE, y2 = Integer.MIN_VALUE;
+        
+        long totalArea = 0;
+        Set<String> points = new HashSet<>();
+
+        for (int[] r : rectangles) {
+            // Update bounding box
+            x1 = Math.min(x1, r[0]);
+            y1 = Math.min(y1, r[1]);
+            x2 = Math.max(x2, r[2]);
+            y2 = Math.max(y2, r[3]);
+
+            // Add to total area
+            totalArea += (long) (r[2] - r[0]) * (r[3] - r[1]);
+
+            // Track corners
+            String[] corners = {
+                r[0] + " " + r[1], r[0] + " " + r[3],
+                r[2] + " " + r[1], r[2] + " " + r[3]
+            };
+
+            for (String p : corners) {
+                if (!points.add(p)) points.remove(p);
+            }
+        }
+
+        // Check if the 4 corners of the bounding box are the only ones left
+        if (!points.contains(x1 + " " + y1) || !points.contains(x1 + " " + y2) ||
+            !points.contains(x2 + " " + y1) || !points.contains(x2 + " " + y2) ||
+            points.size() != 4) {
+            return false;
+        }
+
+        // Final check: area must match
+        return totalArea == (long) (x2 - x1) * (y2 - y1);
+    }
+}
