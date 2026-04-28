@@ -1,0 +1,40 @@
+class Solution {
+    public int splitArray(int[] nums, int k) {
+        int max = 0;
+        long sum = 0;
+        for (int num : nums) {
+            max = Math.max(max, num);
+            sum += num;
+        }
+
+        long low = max;
+        long high = sum;
+        long ans = sum;
+
+        while (low <= high) {
+            long mid = low + (high - low) / 2;
+            if (canSplit(nums, k, mid)) {
+                ans = mid;
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return (int) ans;
+    }
+
+    private boolean canSplit(int[] nums, int k, long mid) {
+        int count = 1;
+        long currentSum = 0;
+        for (int num : nums) {
+            if (currentSum + num > mid) {
+                count++;
+                currentSum = num;
+                if (count > k) return false;
+            } else {
+                currentSum += num;
+            }
+        }
+        return true;
+    }
+}
